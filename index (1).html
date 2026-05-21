@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Shri Ganesh Restaurant & Resort</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;1,400&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #0d0d0d;
+            --text-main: #f5f5f5;
+            --text-muted: #aaaaaa;
+            --accent-gold: #e5c158;
+            --card-bg: #1a1a1a;
+            --input-bg: #262626;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            padding-bottom: 80px; /* Space for mobile bottom nav */
+        }
+
+        h1, h2, h3 { font-family: 'Playfair Display', serif; font-weight: 600; }
+
+        /* Top Header for Branding */
+        header {
+            background: linear-gradient(to bottom, rgba(13,13,13,1), rgba(13,13,13,0.8));
+            backdrop-filter: blur(10px);
+            padding: 18px 20px;
+            text-align: center;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            border-bottom: 1px solid rgba(229, 193, 88, 0.15);
+        }
+        .logo { font-size: 20px; font-weight: 600; color: var(--accent-gold); letter-spacing: 3px; }
+
+        /* Premium Mobile Bottom Navigation Bar */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0; left: 0; width: 100%;
+            background: rgba(26, 26, 26, 0.95);
+            backdrop-filter: blur(15px);
+            display: flex;
+            justify-content: space-around;
+            padding: 12px 0;
+            border-top: 1px solid rgba(229, 193, 88, 0.2);
+            z-index: 1000;
+            box-shadow: 0 -5px 25px rgba(0,0,0,0.5);
+        }
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 11px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .nav-item .icon { font-size: 20px; margin-bottom: 4px; transition: transform 0.3s ease; }
+        .nav-item.active { color: var(--accent-gold); }
+        .nav-item.active .icon { transform: scale(1.15); }
+
+        /* Dynamic Page Sections */
+        .page-section {
+            display: none;
+            animation: slideUpFade 0.5s cubic-bezier(0.25, 1, 0.5, 1);
+        }
+        .page-section.active { display: block; }
+
+        @keyframes slideUpFade {
+            from { opacity: 0; transform: translateY(15px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Mobile-Optimized Hero Banners */
+        .hero {
+            width: 100%; height: 45vh;
+            background-size: cover; background-position: center;
+            display: flex; align-items: center; justify-content: center;
+            text-align: center; position: relative;
+        }
+        .hero::before {
+            content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(to bottom, rgba(13,13,13,0.4), rgba(13,13,13,0.95));
+        }
+        .hero-content { position: relative; z-index: 1; padding: 0 20px; }
+        .hero h1 { font-size: 2.2rem; color: var(--accent-gold); margin-bottom: 8px; text-shadow: 0 2px 10px rgba(0,0,0,0.8); }
+        .hero p { font-size: 0.95rem; color: #ddd; font-weight: 300; }
+
+        .container { padding: 30px 20px; }
+        .section-title { font-size: 1.8rem; color: var(--accent-gold); margin-bottom: 15px; text-align: center; }
+        .section-desc { text-align: center; font-size: 0.95rem; color: var(--text-muted); line-height: 1.6; margin-bottom: 30px; }
+
+        /* Grid Setup for Mobile Cards */
+        .menu-grid { display: flex; flex-direction: column; gap: 20px; }
+        
+        .menu-card {
+            background: var(--card-bg); border-radius: 16px; overflow: hidden;
+            border: 1px solid rgba(255,255,255,0.03);
+            display: flex; flex-direction: column;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+        }
+        .menu-card img { width: 100%; height: 210px; object-fit: cover; }
+        .menu-info { padding: 20px; display: flex; flex-direction: column; justify-content: space-between; flex-grow: 1; }
+        .menu-info h3 { color: var(--accent-gold); font-size: 1.3rem; margin-bottom: 6px; }
+        .menu-info p { color: var(--text-muted); font-size: 0.85rem; line-height: 1.4; margin-bottom: 15px; }
+        
+        /* Modern Quantity Controls */
+        .qty-row { display: flex; justify-content: space-between; align-items: center; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 15px; }
+        .price-tag { font-weight: 600; color: #fff; font-size: 1.1rem; }
+        .qty-controls { display: flex; align-items: center; background: var(--input-bg); border-radius: 20px; padding: 4px; border: 1px solid rgba(229, 193, 88, 0.3); }
+        .qty-btn { background: none; border: none; color: var(--accent-gold); font-size: 18px; width: 32px; height: 32px; font-weight: 600; cursor: pointer; }
+        .qty-input { width: 35px; text-align: center; background: none; border: none; color: #fff; font-size: 14px; font-weight: 600; font-family: 'Poppins', sans-serif; pointer-events: none;}
+
+        /* Styled Premium Form */
+        .order-form { background: var(--card-bg); padding: 25px 20px; border-radius: 20px; margin-top: 35px; border: 1px solid rgba(229, 193, 88, 0.1); }
+        .form-group { margin-bottom: 18px; }
+        .form-group label { display: block; margin-bottom: 8px; color: var(--accent-gold); font-size: 0.9rem; font-weight: 500; }
+        .form-group input, .form-group textarea {
+            width: 100%; padding: 14px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.05);
+            background: var(--input-bg); color: white; font-family: 'Poppins', sans-serif; font-size: 0.95rem; outline: none; transition: border-color 0.3s;
+        }
+        .form-group input:focus, .form-group textarea:focus { border-color: var(--accent-gold); }
+
+        /* Premium Buttons */
+        .btn {
+            background: linear-gradient(135deg, #e5c158, #bfa043); color: #0d0d0d; padding: 15px 30px;
+            border: none; border-radius: 14px; font-weight: 600; cursor: pointer;
+            width: 100%; font-size: 1rem; text-transform: uppercase; letter-spacing: 1px;
+            box-shadow: 0 5px 15px rgba(229, 193, 88, 0.2); transition: all 0.3s ease;
+        }
+        .whatsapp-btn { background: #25D366; color: white; box-shadow: 0 5px 15px rgba(37, 211, 102, 0.2); margin-top: 10px; display: flex; align-items: center; justify-content: center; gap: 10px; }
+
+        /* Aesthetic Image Showcase for Resort */
+        .resort-img-box { position: relative; border-radius: 16px; overflow: hidden; margin-bottom: 20px; border: 1px solid rgba(229, 193, 88, 0.2); }
+        .resort-img-box img { width: 100%; display: block; }
+
+        /* Compact Footer */
+        footer { text-align: center; padding: 40px 20px; background: #050505; border-top: 1px solid rgba(255,255,255,0.02); color: var(--text-muted); font-size: 0.85rem; }
+        footer strong { color: var(--accent-gold); }
+    </style>
+</head>
+<body>
+
+    <!-- Top Bar -->
+    <header>
+        <div class="logo">SHRI GANESH</div>
+    </header>
+
+    <!-- PAGE 1: HOME -->
+    <section id="home" class="page-section active">
+        <div class="hero" style="background-image: url('https://images.unsplash.com/photo-1555396273-367ea4eb4db5?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80');">
+            <div class="hero-content">
+                <h1>The Bike Cafe</h1>
+                <p>Jodhpur's First Premium Bike-Themed Culinary Experience</p>
+            </div>
+        </div>
+        <div class="container">
+            <h2 class="section-title">Ride In. Dine Fine.</h2>
+            <p class="section-desc">Welcome to a place where the thrill of the open road meets the comfort of authentic flavors. Feel the aesthetic biker vibes combined with royal Rajasthani hospitality.</p>
+            <button class="btn" onclick="showPage('order')">Explore Menu & Order</button>
+        </div>
+    </section>
+
+    <!-- PAGE 2: RESORT -->
+    <section id="resort" class="page-section">
+        <div class="hero" style="background-image: url('https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80');">
+            <div class="hero-content">
+                <h1>The Resort</h1>
+                <p>Escape the City. Relax in Nature.</p>
+            </div>
+        </div>
+        <div class="container">
+            <div class="resort-img-box">
+                <img src="https://images.unsplash.com/photo-1566073771259-6a8506099945?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Resort Stay">
+            </div>
+            <h2 class="section-title" style="text-align: left;">Luxurious Staycation</h2>
+            <p class="section-desc" style="text-align: left; margin-bottom: 20px;">Experience the perfect blend of modern luxury and traditional charm. Our resort offers beautifully curated aesthetic stays, tranquil environments, and exceptional services tailored for you.</p>
+            <button class="btn" onclick="showPage('order')">Order Food To Room</button>
+        </div>
+    </section>
+
+    <!-- PAGE 3: ORDER -->
+    <section id="order" class="page-section">
+        <div class="hero" style="height: 30vh; background-image: url('https://images.unsplash.com/photo-1504674900247-0877df9cc836?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80');">
+            <div class="hero-content">
+                <h1>Order Online</h1>
+                <p>Fresh Food Sent Directly Via WhatsApp</p>
+            </div>
+        </div>
+        
+        <div class="container">
+            <h2 class="section-title" style="margin-bottom: 25px;">Our Bike Specialties</h2>
+            <div class="menu-grid">
+                <!-- Item 1 -->
+                <div class="menu-card">
+                    <img src="https://images.unsplash.com/photo-1585937421606-0d80096eea89?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80" alt="Paneer Tikka">
+                    <div class="menu-info">
+                        <h3>Cruiser Paneer Tikka</h3>
+                        <p>Smoky & spicy premium paneer roasted over live charcoal for true riders.</p>
+                        <div class="qty-row">
+                            <span class="price-tag">₹250</span>
+                            <div class="qty-controls">
+                                <button class="qty-btn" onclick="changeQty('paneer', -1)">-</button>
+                                <input type="number" id="qty-paneer" class="qty-input" value="0" min="0">
+                                <button class="qty-btn" onclick="changeQty('paneer', 1)">+</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Item 2 -->
+                <div class="menu-card">
+                    <img src="https://images.unsplash.com/photo-1546833999-b9f581a1996d?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80" alt="Dal Makhani">
+                    <div class="menu-info">
+                        <h3>Bullet Dal Makhani</h3>
+                        <p>Rich, extra creamy, 24-hour slow-cooked traditional black dal.</p>
+                        <div class="qty-row">
+                            <span class="price-tag">₹220</span>
+                            <div class="qty-controls">
+                                <button class="qty-btn" onclick="changeQty('dal', -1)">-</button>
+                                <input type="number" id="qty-dal" class="qty-input" value="0" min="0">
+                                <button class="qty-btn" onclick="changeQty('dal', 1)">+</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Item 3 -->
+                <div class="menu-card">
+                    <img src="https://images.unsplash.com/photo-1596797038530-2c107229654b?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80" alt="Special Thali">
+                    <div class="menu-info">
+                        <h3>Ganesh Special Thali</h3>
+                        <p>The ultimate heavy rider's feast featuring traditional pure veg dishes.</p>
+                        <div class="qty-row">
+                            <span class="price-tag">₹350</span>
+                            <div class="qty-controls">
+                                <button class="qty-btn" onclick="changeQty('thali', -1)">-</button>
+                                <input type="number" id="qty-thali" class="qty-input" value="0" min="0">
+                                <button class="qty-btn" onclick="changeQty('thali', 1)">+</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Form -->
+            <div class="order-form">
+                <h3 style="color: var(--accent-gold); margin-bottom: 15px; font-family: 'Poppins', sans-serif; font-weight:600;">Delivery Details</h3>
+                <div class="form-group">
+                    <label>Your Name</label>
+                    <input type="text" id="cust-name" placeholder="Enter full name">
+                </div>
+                <div class="form-group">
+                    <label>Delivery Address</label>
+                    <textarea id="cust-address" rows="3" placeholder="Enter complete address"></textarea>
+                </div>
+                
+                <button class="btn whatsapp-btn" onclick="sendWhatsAppOrder()">
+                    <span>💬</span> Send Order via WhatsApp
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer Area -->
+    <footer>
+        <p><strong>Shri Ganesh Restaurant & Resort</strong></p>
+        <p style="margin: 8px 0 15px; line-height:1.4;">Shree Yade Nagar, Digari, Jodhpur, Rajasthan</p>
+        <p style="color: #666; font-size: 0.75rem;">© 2026 Shri Ganesh. Designed Premium.</p>
+    </footer>
+
+    <!-- Mobile Bottom Navigation Bar -->
+    <div class="bottom-nav">
+        <a onclick="showPage('home')" class="nav-item active" id="nav-home">
+            <span class="icon">🏠</span>
+            <span>Home</span>
+        </a>
+        <a onclick="showPage('resort')" class="nav-item" id="nav-resort">
+            <span class="icon">🏨</span>
+            <span>Resort</span>
+        </a>
+        <a onclick="showPage('order')" class="nav-item" id="nav-order">
+            <span class="icon">🛵</span>
+            <span>Order</span>
+        </a>
+    </div>
+
+    <script>
+        // Smooth Page Switcher Logic
+        function showPage(pageId) {
+            document.querySelectorAll('.page-section').forEach(section => section.classList.remove('active'));
+            document.querySelectorAll('.nav-item').forEach(link => link.classList.remove('active'));
+
+            document.getElementById(pageId).classList.add('active');
+            document.getElementById('nav-' + pageId).classList.add('active');
+            
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // Elegant Plus/Minus Button Handler
+        function changeQty(itemId, val) {
+            const input = document.getElementById('qty-' + itemId);
+            let currentVal = parseInt(input.value);
+            currentVal += val;
+            if(currentVal < 0) currentVal = 0;
+            input.value = currentVal;
+        }
+
+        // Formatted WhatsApp Sender
+        function sendWhatsAppOrder() {
+            const phone = "916375318696";
+            const name = document.getElementById('cust-name').value;
+            const address = document.getElementById('cust-address').value;
+            
+            if(!name || !address) {
+                alert("Please fill your Name and Address details.");
+                return;
+            }
+
+            const qtyPaneer = parseInt(document.getElementById('qty-paneer').value);
+            const qtyDal = parseInt(document.getElementById('qty-dal').value);
+            const qtyThali = parseInt(document.getElementById('qty-thali').value);
+
+            if(qtyPaneer === 0 && qtyDal === 0 && qtyThali === 0) {
+                alert("Please select at least 1 food item first!");
+                return;
+            }
+
+            let orderItems = "";
+            let total = 0;
+
+            if(qtyPaneer > 0) { orderItems += `• Cruiser Paneer Tikka x ${qtyPaneer} (₹${qtyPaneer * 250})\n`; total += (qtyPaneer * 250); }
+            if(qtyDal > 0) { orderItems += `• Bullet Dal Makhani x ${qtyDal} (₹${qtyDal * 220})\n`; total += (qtyDal * 220); }
+            if(qtyThali > 0) { orderItems += `• Ganesh Special Thali x ${qtyThali} (₹${qtyThali * 350})\n`; total += (qtyThali * 350); }
+
+            const message = `*🔥 NEW WEBSITE ORDER! 🔥*\n\n👤 *Customer Name:* ${name}\n📍 *Delivery Address:* ${address}\n\n📦 *Order Details:*\n${orderItems}\n💰 *Total Amount:* ₹${total}\n\nPlease prepare the order fast! 🛵`;
+            
+            const encodedMessage = encodeURIComponent(message);
+            window.open(`https://wa.me/${phone}?text=${encodedMessage}`, '_blank');
+        }
+    </script>
+</body>
+</html>
